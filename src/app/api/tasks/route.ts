@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
     const assignedTo = searchParams.get('assignedTo');
 
     // Build filter object
-    const filter: any = {};
+    const filter: Record<string, unknown> = {};
     if (status) {
       filter.status = status;
     }
@@ -72,12 +72,12 @@ export async function POST(request: NextRequest) {
       },
       { status: 201 }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error creating task:', error);
-    
+
     // Handle validation errors
-    if (error.name === 'ValidationError') {
-      const validationErrors = Object.values(error.errors).map((err: any) => err.message);
+    if (error && typeof error === 'object' && 'name' in error && error.name === 'ValidationError' && 'errors' in error) {
+      const validationErrors = Object.values((error as unknown as { errors: Record<string, { message: string }> }).errors).map((err) => err.message);
       return NextResponse.json(
         {
           success: false,
