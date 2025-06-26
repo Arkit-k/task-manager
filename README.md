@@ -110,7 +110,7 @@ src/
 3. **Environment Setup**
    Create a `.env.local` file in the root directory:
    ```env
-   MONGODB_URI=mongodb+srv://akraone400:Jhm1xgfJn6fv2Veu@justforyou.ueltj.mongodb.net/?retryWrites=true&w=majority&appName=justforyou
+   MONGODB_URI=mongodb+srv://Yourusername:yourpassword@dbname.ueltj.mongodb.net/?retryWrites=true&w=majority&appName=dbname
    MONGODB_DB=taskmanager
    ```
 
