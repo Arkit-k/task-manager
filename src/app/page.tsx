@@ -7,7 +7,7 @@ import { useTheme } from '@/contexts/ThemeContext';
 
 export default function Home() {
   const [showForm, setShowForm] = useState(false);
-  const { theme, toggleTheme, isDark } = useTheme();
+  const { toggleTheme, isDark } = useTheme();
 
   // Prevent body scroll when modal is open
   useEffect(() => {

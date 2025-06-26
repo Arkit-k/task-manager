@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useReducer, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useReducer, useEffect, useCallback, ReactNode } from 'react';
 import { Task, CreateTaskInput, UpdateTaskInput, TaskFilters, ApiResponse } from '@/types';
 
 interface TaskState {
@@ -108,7 +108,7 @@ export const TaskProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [state, dispatch] = useReducer(taskReducer, initialState);
 
   // Fetch tasks from API
-  const fetchTasks = async () => {
+  const fetchTasks = useCallback(async () => {
     try {
       dispatch({ type: 'SET_LOADING', payload: true });
 
@@ -129,9 +129,10 @@ export const TaskProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         dispatch({ type: 'SET_ERROR', payload: result.error || 'Failed to fetch tasks' });
       }
     } catch (error) {
+      console.error('Error fetching tasks:', error);
       dispatch({ type: 'SET_ERROR', payload: 'Network error occurred' });
     }
-  };
+  }, [state.filters]);
 
   // Add task via API
   const addTask = async (task: CreateTaskInput) => {
@@ -154,6 +155,7 @@ export const TaskProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         dispatch({ type: 'SET_ERROR', payload: result.error || 'Failed to create task' });
       }
     } catch (error) {
+      console.error('Error creating task:', error);
       dispatch({ type: 'SET_ERROR', payload: 'Network error occurred' });
     }
   };
@@ -180,6 +182,7 @@ export const TaskProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         dispatch({ type: 'SET_ERROR', payload: result.error || 'Failed to update task' });
       }
     } catch (error) {
+      console.error('Error updating task:', error);
       dispatch({ type: 'SET_ERROR', payload: 'Network error occurred' });
     }
   };
@@ -201,6 +204,7 @@ export const TaskProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         dispatch({ type: 'SET_ERROR', payload: result.error || 'Failed to delete task' });
       }
     } catch (error) {
+      console.error('Error deleting task:', error);
       dispatch({ type: 'SET_ERROR', payload: 'Network error occurred' });
     }
   };
@@ -221,7 +225,7 @@ export const TaskProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   // Fetch tasks on mount and when filters change
   useEffect(() => {
     fetchTasks();
-  }, [state.filters]);
+  }, [fetchTasks]);
 
   const value: TaskContextType = {
     state,
